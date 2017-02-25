@@ -1,13 +1,12 @@
-use std::io::{self, Read};
+use std::io;
 
 fn main() {
-    fn read_input() -> io::Result<String> {
-        let mut buffer = String::new();
-        try!(io::stdin().read_to_string(&mut buffer));
-        Ok(buffer)
+    let mut input = String::new();
+    match io::stdin().read_line(&mut input) {
+        Ok(n) => {
+            println!("{} bytes read", n);
+            println!("{}", input);
+        }
+        Err(error) => println!("error: {}", error),
     }
-
-    let buf = read_input();
-    println!("got input: {}", buf);
-
 }
