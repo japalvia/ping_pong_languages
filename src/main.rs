@@ -6,25 +6,29 @@ use byteorder::{NativeEndian, ReadBytesExt};
 use std::io::Cursor;
 use std::str;
 
-fn main() {
-    let mut buffer: [u8; 4] = [0; 4];
-    match io::stdin().read(&mut buffer) {
-        Ok(n) => {
-            println!("{} bytes read", n);
-            println!("bytes: {:?}", buffer);
-            let mut val = Cursor::new(buffer);
-            println!("bytes to int: {}", val.read_u32::<NativeEndian>().unwrap());
-        }
-        Err(error) => println!("error: {}", error),
-    }
+fn send_message() {
+   let mut bytes: [u8; 4] = [0; 4];
+   let mut cursor = Cursor::new(bytes);
+}
 
-    let mut data = Vec::new();
-    match io::stdin().read_to_end(&mut data) {
-        Ok(n) => {
-            println!("{} bytes read", n);
-            let s = String::from_utf8(data).expect("Found invalid UTF-8");
-            println!("{}", s);
-        }
-        Err(error) => println!("error: {}", error),
+fn main() {
+    let mut bytes: [u8; 4] = [0; 4];
+    io::stdin().read(&mut bytes).unwrap();
+    let mut c = Cursor::new(bytes);
+    let len = c.read_u32::<NativeEndian>().unwrap();
+    println!("len: {}", len);
+
+    // Note: read() requires pre-sized vector
+    let mut buf = vec![0; len as usize];
+    let mut handle = io::stdin().take(len as u64);
+    let n = handle.read(&mut buf).unwrap();
+    println!("n: {}", n);
+
+    let msg = String::from_utf8(buf).unwrap();
+    println!("message: {}", msg);
+
+    if msg == "ping" {
+        println!("we got ping");
+        send_message();
     }
 }
