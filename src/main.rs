@@ -1,4 +1,5 @@
 extern crate byteorder;
+#[macro_use]
 extern crate serde_json;
 
 use std::io;
@@ -8,15 +9,17 @@ use std::io::Cursor;
 use serde_json::Value;
 
 fn send_message() {
-   // let mut c = Cursor::new(bytes);
+    let val = json!([
+        "pong"
+    ]);
+    let val_str = val.to_string();
+    let mut bytes = vec![];
 
-   let msg = "pong";
+    bytes.write_u32::<NativeEndian>(val_str.len() as u32).unwrap();
+    io::stdout().write(bytes.as_slice()).unwrap();
+    io::stdout().write(val_str.as_bytes()).unwrap();
+    io::stdout().flush().unwrap();
 
-   let mut bytes = vec![];
-   bytes.write_u32::<NativeEndian>(msg.len() as u32).unwrap();
-   io::stdout().write(bytes.as_slice()).unwrap();
-   io::stdout().write(msg.as_bytes()).unwrap();
-   io::stdout().flush().unwrap();
 }
 
 fn debug(s: String) {
@@ -40,12 +43,15 @@ fn main() {
 
     let value: Value = serde_json::from_str(&msg).unwrap();
     debug(format!("value: {}", value));
-    debug(format!("json test: {}", value["foo"]));
+    debug(format!("json test: {}", value[0]));
 
-    /*
-    if msg == "ping" {
-        // println!("we got ping");
+    // Message from example add-on is not JSON string but just
+    // a string literal.
+    if value == "ping" {
         send_message();
     }
-*/
+    // This is JSON array with "ping" object
+    if value[0] == "ping" {
+        send_message();
+    }
 }

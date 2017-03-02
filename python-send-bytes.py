@@ -17,7 +17,6 @@ def sendMessage(encodedMessage):
     sys.stdout.write(encodedMessage['content'])
     sys.stdout.flush()
 
-
-# sendMessage(encodeMessage( ['foo', {'4': 5, '6': 7}] ))
-sendMessage(encodeMessage( {'foo' : 'pong' } ))
+# sendMessage(encodeMessage( {'foo' : 'pong' } ))
+sendMessage(encodeMessage( [ "ping" ] ))
 
