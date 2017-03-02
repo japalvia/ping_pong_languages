@@ -5,6 +5,7 @@ use std::io;
 use std::io::{Read, Write};
 use byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use std::io::Cursor;
+use serde_json::Value;
 
 fn send_message() {
    // let mut c = Cursor::new(bytes);
@@ -36,6 +37,11 @@ fn main() {
 
     let msg = String::from_utf8(buf).unwrap();
     debug(format!("message: {}", msg));
+
+    let value: Value = serde_json::from_str(&msg).unwrap();
+    debug(format!("value: {}", value));
+    debug(format!("json test: {}", value["foo"]));
+
     /*
     if msg == "ping" {
         // println!("we got ping");
