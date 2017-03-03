@@ -8,25 +8,11 @@ use byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use std::io::Cursor;
 use serde_json::Value;
 
-fn send_message() {
-    let val = json!([
-        "pong"
-    ]);
-    let val_str = val.to_string();
-    let mut bytes = vec![];
-
-    bytes.write_u32::<NativeEndian>(val_str.len() as u32).unwrap();
-    io::stdout().write(bytes.as_slice()).unwrap();
-    io::stdout().write(val_str.as_bytes()).unwrap();
-    io::stdout().flush().unwrap();
-
-}
-
 fn debug(s: String) {
     writeln!(&mut std::io::stderr(), "{}", s).unwrap();
 }
 
-fn main() {
+fn receive_message() -> String {
     let mut bytes: [u8; 4] = [0; 4];
     io::stdin().read(&mut bytes).unwrap();
     let mut c = Cursor::new(bytes);
@@ -38,12 +24,26 @@ fn main() {
     let mut handle = io::stdin().take(len as u64);
     handle.read(&mut buf).unwrap();
 
-    let msg = String::from_utf8(buf).unwrap();
-    debug(format!("message: {}", msg));
+    String::from_utf8(buf).unwrap()
+}
 
+fn send_message() {
+    let val = json!([
+        "pong"
+    ]);
+    let val_str = val.to_string();
+    let mut bytes = vec![];
+
+    bytes.write_u32::<NativeEndian>(val_str.len() as u32).unwrap();
+    io::stdout().write(bytes.as_slice()).unwrap();
+    io::stdout().write(val_str.as_bytes()).unwrap();
+    io::stdout().flush().unwrap();
+}
+
+fn main() {
+    let msg = receive_message();
     let value: Value = serde_json::from_str(&msg).unwrap();
     debug(format!("value: {}", value));
-    debug(format!("json test: {}", value[0]));
 
     // Message from example add-on is not JSON string but just
     // a string literal.
