@@ -31,7 +31,6 @@ void debug(const char *fmt, ...)
 	}
 	va_end(ap);
 
-	/* return p; */
 	fprintf(stderr, "%s\n", p);
 	free(p);
 }
@@ -49,10 +48,20 @@ int main(int argc, char **argv) {
 	unsigned char buf[4] = {0};
 
 	fread(buf, sizeof(buf[0]), sizeof(buf), stdin);
-	unsigned int value = bin2int(buf);
-	fprintf(stderr, "%d\n", value);
+	unsigned int len = bin2int(buf);
+	debug("%d", len);
 
-	debug("%d", value);
+	char *data = calloc(len + 1, sizeof(char));
+	if (!data) {
+		debug("calloc() failed");
+		exit(1);
+	}
+
+    fread(data, sizeof(data[0]), len, stdin);
+    debug("data: %s\n", data);
+
+
+    free(data);
 
 	return 0;
 }
