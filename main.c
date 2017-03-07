@@ -7,7 +7,7 @@
 
 void debug(const char *fmt, ...)
 {
-    int size = 0;
+    size_t size = 0;
     char *p = NULL;
     va_list ap;
 
@@ -37,16 +37,16 @@ void debug(const char *fmt, ...)
     free(p);
 }
 
-int bin2int(unsigned char *bytes) {
-    int val = bytes[0] \
-              | ( (int)bytes[1] << 8 ) \
-              | ( (int)bytes[2] << 16 ) \
-              | ( (int)bytes[3] << 24 );
+size_t bin2int(unsigned char *bytes) {
+    size_t val = bytes[0] \
+              | ( (size_t)bytes[1] << 8 ) \
+              | ( (size_t)bytes[2] << 16 ) \
+              | ( (size_t)bytes[3] << 24 );
 
     return val;
 }
 
-unsigned char *int2bin(unsigned int n) {
+unsigned char *int2bin(size_t n) {
     unsigned char *bytes;
     bytes = calloc(4, sizeof(*bytes));
 
@@ -62,7 +62,7 @@ char *receive_message() {
     unsigned char buf[4] = {0};
 
     fread(buf, sizeof(buf[0]), sizeof(buf), stdin);
-    unsigned int len = bin2int(buf);
+    size_t len = bin2int(buf);
     debug("%d\n", len);
 
     char *text = calloc(len + 1, sizeof(char));
