@@ -37,6 +37,8 @@ void debug(const char *fmt, ...)
     free(p);
 }
 
+
+// Convert non-negative value from byte array to size_t.
 size_t bin2int(unsigned char *bytes) {
     size_t val = bytes[0] \
               | ( (size_t)bytes[1] << 8 ) \
