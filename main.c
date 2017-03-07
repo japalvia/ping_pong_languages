@@ -95,29 +95,39 @@ void send_message() {
 
 int main(int argc, char **argv) {
 
-	char *text = receive_message();
-	debug("text: %s\n", text);
+    char *text = receive_message();
+    debug("text: %s\n", text);
 
-	json_t *root;
-	json_error_t error;
+    json_t *root;
+    json_error_t error;
 
-	root = json_loads(text, 0, &error);
-	free(text);
+    root = json_loads(text, 0, &error);
+    free(text);
 
-	// Look for 'ping', ignore unexpected json
-	// but ensure still crash safety.
-	if(root) {
-		if(json_is_array(root)) {
-			json_t *data = json_array_get(root, 0);
-			if(json_is_string(data)) {
-				if(strcmp(json_string_value(data), "ping") == 0) {
-					send_message();
-				}
-			}
-		}
-		json_decref(root);
-	}
-	return 0;
+    // Look for 'ping', ignore unexpected json
+    // but ensure still crash safety.
+    if(!root) {
+        debug("JSON decode failed\n");
+        json_decref(root);
+        return 1;
+    }
+    if(!json_is_array(root)) {
+        debug("JSON not array\n");
+        json_decref(root);
+        return 1;
+    }
+    json_t *data = json_array_get(root, 0);
+    if(!json_is_string(data)) {
+        debug("Object is not string\n");
+        json_decref(root);
+        return 1;
+    }
+    if(strcmp(json_string_value(data), "ping") == 0) {
+        send_message();
+    }
+    json_decref(root);
+
+    return 0;
 }
 
 
