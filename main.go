@@ -3,13 +3,9 @@ package main
 import (
     "bytes"
     "encoding/binary"
-    "fmt"
+    "log"
     "os"
 )
-
-func debug(msg string) {
-    fmt.Println(msg)
-}
 
 func receiveMessage() ([]byte) {
     var msgLen uint32
@@ -18,12 +14,12 @@ func receiveMessage() ([]byte) {
 
     buf := bytes.NewReader(data)
     binary.Read(buf, binary.LittleEndian, &msgLen)
-    fmt.Println("msgLen:", msgLen)
+    log.Printf("msgLen %v", msgLen)
     return data
 }
 
 func main() {
     var msg = receiveMessage()
-    debug(string(msg[:]))
+    log.Printf("test: %v", msg)
 
 }
