@@ -47,8 +47,8 @@ func main() {
 		log.Panicf("Failed to decode json: %v\n", err)
 	}
 
-	array := f.([]interface{})
-	if array[0] == "ping" {
+	array, ok := f.([]interface{})
+	if ok && array[0] == "ping" {
 		sendMessage()
 	}
 }
