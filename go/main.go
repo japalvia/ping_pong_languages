@@ -25,7 +25,10 @@ func receiveMessage() []byte {
 func sendMessage() {
 	r := make([]string, 1)
 	r[0] = "pong"
-	b, _ := json.Marshal(r)
+	b, err := json.Marshal(r)
+	if err != nil {
+		log.Panicf("Encoding json failed: %v\n", err)
+	}
 
 	buf := new(bytes.Buffer)
 	msgLen := uint32(len(b))
