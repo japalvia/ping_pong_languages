@@ -6,4 +6,4 @@ UTILS=../utils
 go build main.go &&
     "$UTILS/python-send-bytes.py" \
         | ./main \
-        "$UTILS/python-reveive-bytes.py"
+        | "$UTILS/python-recv-bytes.py"

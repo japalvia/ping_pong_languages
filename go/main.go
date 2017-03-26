@@ -15,7 +15,7 @@ func receiveMessage() []byte {
 
 	buf := bytes.NewReader(data)
 	binary.Read(buf, binary.LittleEndian, &msgLen)
-	log.Printf("msgLen: %v", msgLen)
+	log.Printf("receiving %v bytes\n", msgLen)
 
 	data = make([]byte, msgLen)
 	os.Stdin.Read(data)
@@ -36,14 +36,14 @@ func sendMessage() {
 
 func main() {
 	var msg = receiveMessage()
-	log.Printf("received: %v", string(msg))
+	log.Printf("received: %v\n", string(msg))
 
 	var f interface{}
 	err := json.Unmarshal(msg, &f)
 	if err != nil {
-		log.Panicf("Failed to decode json: %v", err)
-
+		log.Panicf("Failed to decode json: %v\n", err)
 	}
+
 	array := f.([]interface{})
 	if array[0] == "ping" {
 		sendMessage()
