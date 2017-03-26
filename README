@@ -1,0 +1,5 @@
+A collection of re-implementation of the "ping-pong" native host application in
+Mozilla WebExtension example
+https://github.com/mdn/webextensions-examples/tree/master/native-messaging
+
+They are for educational purposes while studying programming languages.
